@@ -1,0 +1,130 @@
+.navbar {
+  position: fixed; /* Gør navbaren fast i toppen */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent baggrund */
+  z-index: 10; /* Sørger for, at navbaren er øverst */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.flag {
+  width: 25px;
+  height: auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column; /* Sikrer, at navbaren ikke overlapper */
+  align-items: center;
+  background: url('https://pbs.twimg.com/media/CW-9CsgVAAMa-eU.jpg') no-repeat center center;
+  background-size: cover;
+  overflow-x: hidden; /* Fjern eventuelle horisontale scrollbars */
+  padding-top: 80px; /* Giver plads til navigationen */
+}
+
+.calendar-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 80%;
+  height: 80%;
+  margin: 40px auto 0; /* Tilføj top-margin for plads til navbar */
+  padding-top: 20px; /* Ekstra plads, hvis nødvendigt */
+}
+
+.door {
+  position: relative;
+  background: linear-gradient( black); /* Julefarver */
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid rgba(137, 130, 130, 0.4);
+  border-radius: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(137, 130, 130, 0.4), 0 0 15px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.door:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(255, 255, 255, 0.5), 0 0 20px rgb(247, 93, 217);
+  
+}
+
+.door.open {
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent baggrund */
+  cursor: not-allowed;
+  transform: scale(1); /* Fjern hover-effekten */
+  box-shadow: none; /* Fjern gløden */
+}
+
+.door::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('gift-wrap.jpg') no-repeat center center;
+  background-size: cover;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.door.open::before {
+  opacity: 0; /* Fjern baggrundsbillede ved åbning */
+}
+
+.door-text {
+  transition: opacity 0.3s ease;
+  z-index: 1; /* Sørg for, at teksten er over baggrundsbilledet */
+}
+
+.door.open .door-text {
+  opacity: 0; /* Skjul advent-teksten */
+}
+
+.hidden-message {
+  position: absolute;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  opacity: 0;
+  z-index: 2; /* Sørg for, at beskeden vises øverst */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.door.open .hidden-message {
+  opacity: 1; /* Vis beskeden */
+}
