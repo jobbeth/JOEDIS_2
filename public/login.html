@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navigation Bar</title>
-    <!-- Korrekt sti til CSS -->
-    <link rel="stylesheet" href="css/home.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
+
+    <!-- Navigation bar -->
     <nav class="navbar">
         <div class="logo">
-            <!-- Korrekt sti til logo -->
             <img src="https://cdn.prod.website-files.com/5cb303852da2ad2e40571231/61e9a1b8cc37151d8d02f8ca_Logo%20New.png" alt="Logo">
         </div>
         <ul class="nav-links">
-            <li><a href="">HOME</a></li>
+            <li><a href="index.html">HOME</a></li>
             <li><a href="#">MENU</a></li>
             <li><a href="#">STORES</a></li>
             <li><a href="#">APP</a></li>
@@ -24,24 +24,34 @@
             <li><a href="#">& MORE</a></li>
         </ul>
         <div class="nav-right">
-            <!-- Korrekt sti til flaget -->
             <img class="flag" src="https://www.stickers.dk/components/com_redshop/assets/images/product/thumb/1394283546_Flag---Danmark1FSand2_w472_h350.png" alt="DK Flag">
             <div class="user-icon">
                 <span>&#128100;</span>
-                <!-- Korrekt sti til login -->
                 <a href="login.html">LOGIN</a>
             </div>
         </div>
     </nav>
 
+    <!-- Main section for login -->
     <section class="order-section">
-        <h1 class="order-title hidden">START YOUR ORDER</h1>
-        <p class="order-description hidden">Fresh juices, healthy shakes and delicious sandwiches. What are you in for today?</p>
-        <button class="order-button hidden">ORDER NOW</button>
+        <div class="login-box">
+            <h1>Login</h1>
+            <form>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+            <p class="signup-message">
+                Don't have an account? <a href="opretbruger.html">Join the club now!</a>
+            </p>
+        </div>
     </section>
 
-    <!-- Korrekt sti til JavaScript -->
-    <script src="js/index.js"></script>
 </body>
 </html>
-
