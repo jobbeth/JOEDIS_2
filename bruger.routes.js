@@ -1,42 +1,53 @@
-import express from 'express';
-import Database2 from './Backend/Database.js'; // Korrekt sti til database_2.js
-import { config } from './config.js';   // Korrekt sti til config.js
+import express from "express";
+import Database2 from "./Backend/Database.js"; // Korrekt sti til database_2.js
+import { config } from "./config.js"; // Korrekt sti til config.js
+import { mailToUser } from "./sendmail.js"; // Importér mail-funktionen
 
 const db = new Database2(config); // Instans af databasen
 const router = express.Router();
 
 // Endpoint til at oprette en ny bruger
-router.post('/api/brugere', async (req, res) => {
-    try {
-        const { Brugernavn, Adgangskode, Email } = req.body;
+router.post("/api/brugere", async (req, res) => {
+  try {
+    const { Brugernavn, Adgangskode, Email } = req.body;
 
-        // Valider at alle nødvendige felter er udfyldt
-        if (!Brugernavn || !Adgangskode || !Email) {
-            return res.status(400).json({ error: 'Missing required fields: Brugernavn, Adgangskode, or Email.' });
-        }
-
-        // Opret brugerobjekt med de nødvendige data
-        const newUser = {
-            Brugernavn,
-            Adgangskode, // Gem adgangskoden som den er
-            Email
-        };
-
-        console.log("Creating user with data:", newUser);
-
-        // Brug funktionen i databasen til at oprette brugeren
-        const result = await db.createUser(newUser);
-
-        // Hvis brugeren blev oprettet korrekt, returner en succesmeddelelse
-        if (result.success) {
-            res.status(201).json({ message: 'User created successfully' });
-        } else {
-            res.status(500).json({ error: result.message || 'Failed to create user.' });
-        }
-    } catch (error) {
-        console.error("Error in POST /api/brugere:", error.message);
-        res.status(500).json({ error: 'Could not create user.' });
+    // Valider, at alle nødvendige felter er udfyldt
+    if (!Brugernavn || !Adgangskode || !Email) {
+      return res.status(400).json({ error: "Missing required fields: Brugernavn, Adgangskode, or Email." });
     }
+
+    // Opret brugerobjekt med de nødvendige data
+    const newUser = {
+      Brugernavn,
+      Adgangskode,
+      Email,
+    };
+
+    console.log("Creating user with data:", newUser);
+
+    // Brug funktionen i databasen til at oprette brugeren
+    const result = await db.createUser(newUser);
+
+    // Hvis brugeren blev oprettet korrekt, send en e-mail
+    if (result.success) {
+      const subject = "Welcome to JOE!";
+      const textMessage = `Hi ${Brugernavn},\n\nThank you for signing up to JOE. We're excited to have you on board!\n\nBest regards,\nThe JOE Team`;
+      const htmlMessage = `<p>Hi ${Brugernavn},</p><p>Thank you for signing up to <strong>JOE</strong>. We're excited to have you on board!</p><p>Best regards,<br>The JOE Team</p>`;
+
+      // Send e-mail
+      const emailResult = await mailToUser(Email, subject, textMessage, htmlMessage);
+      if (!emailResult.success) {
+        console.error("Failed to send confirmation email:", emailResult.error);
+      }
+
+      res.status(201).json({ message: "User created successfully and confirmation email sent!" });
+    } else {
+      res.status(500).json({ error: result.message || "Failed to create user." });
+    }
+  } catch (error) {
+    console.error("Error in POST /api/brugere:", error.message);
+    res.status(500).json({ error: "Could not create user." });
+  }
 });
 
 // Ny endpoint til at hente alle brugere
