@@ -2,13 +2,15 @@ import nodemailer from "nodemailer";
 
 // Konfiguration af Gmail SMTP Server
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-    user: "joe.cbs.eksame@gmail.com", // Gmail-adresse
-    pass: "yfty rrmo rkob zjly", // Gmail app password
-  },
-});
-
+    service: "Gmail",
+    auth: {
+      user: "joe.cbs.eksame@gmail.com",
+      pass: "yfty rrmo rkob zjly",
+    },
+    debug: true, // Aktiver debugging
+    logger: true, // Log al trafik
+  });
+  
 // Verificer forbindelsen til Gmail SMTP serveren
 transporter.verify(function (error, success) {
   if (error) {
