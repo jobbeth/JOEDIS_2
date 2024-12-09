@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const doors = document.querySelectorAll(".door");
   const adventDates = [
     new Date("2024-12-03"), // 1. Advent
-    new Date("2024-12-10"), // 2. Advent
+    new Date("2024-12-08"), // 2. Advent
     new Date("2024-12-17"), // 3. Advent
     new Date("2024-12-24")  // 4. Advent
   ];
