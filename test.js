@@ -12,3 +12,5 @@ const db = new Database2(config);
         console.log("No user found with the username 'test1'.");
     }
 })();
+
+// test kommentar
