@@ -2,6 +2,7 @@ import express from "express";
 import Database2 from "./Backend/Database.js"; // Korrekt sti til database_2.js
 import { config } from "./config.js"; // Korrekt sti til config.js
 import { mailToUser } from "./sendmail.js"; // Importér mail-funktionen
+import bcrypt from "bcrypt"; // Tilføj bcrypt til at håndtere adgangskodekryptering
 
 const db = new Database2(config); // Instans af databasen
 const router = express.Router();
@@ -16,10 +17,14 @@ router.post("/api/brugere", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields: Brugernavn, Adgangskode, or Email." });
     }
 
-    // Opret brugerobjekt med de nødvendige data
+    // Krypter adgangskoden
+    const saltRounds = 10; // Antal salt-runder (kan justeres)
+    const hashedPassword = await bcrypt.hash(Adgangskode, saltRounds);
+
+    // Opret brugerobjekt med krypteret adgangskode
     const newUser = {
       Brugernavn,
-      Adgangskode,
+      Adgangskode: hashedPassword,
       Email,
     };
 
@@ -66,7 +71,6 @@ router.get('/api/brugere', async (req, res) => {
     }
 });
 
-
 // Endpoint til login
 router.post('/api/login', async (req, res) => {
     try {
@@ -86,7 +90,8 @@ router.post('/api/login', async (req, res) => {
         }
 
         // Sammenlign adgangskoder
-        if (user.Adgangskode !== Adgangskode) { // Tilføj hashing her, hvis adgangskoder er hashede
+        const passwordMatch = await bcrypt.compare(Adgangskode, user.Adgangskode);
+        if (!passwordMatch) {
             return res.status(401).json({ error: 'Invalid username or password.' });
         }
 
