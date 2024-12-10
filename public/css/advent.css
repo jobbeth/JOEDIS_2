@@ -22,6 +22,7 @@ body {
 
 /* Navbar styling */
 .navbar {
+  padding-left: 20px; /* Ryk alt til højre */
   position: fixed; /* Holder navbaren øverst */
   top: 0;
   left: 0;
@@ -29,26 +30,19 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px; /* Vandret padding */
-  height: 70px; /* Fast højde */
+  height: 75px; /* Fast højde */
   background-color: white; /* Hvid baggrund */
   border-bottom: 1px solid #ccc; /* Tynd grå linje under navbaren */
-  z-index: 10;
 }
 
 .logo img {
   height: 50px; /* Dynamisk højde */
-  width: auto; /* Justér bredden proportionalt */
+  width: 100px; /* Justér bredden proportionalt */
 }
+
+
 
 .nav-links {
-  list-style: none;
-  display: flex;
-  gap: 30px; /* Mellemrum mellem links */
-  margin: 0; /* Fjern ekstra margin */
-}
-
-.nav-links a {
   text-decoration: none; /* Ingen understregning */
   color: black; /* Sort tekstfarve */
   font-weight: bold; /* Fed skrift */
@@ -56,10 +50,13 @@ body {
   line-height: 70px; /* Justér vertikal centrering med navbarens højde */
 }
 
+.nav-links li {
+  margin-right: 15px;
+}
+
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 15px; /* Mellemrum mellem elementer */
 }
 
 .flag {
@@ -73,7 +70,7 @@ body {
 }
 
 .user-icon span {
-  font-size: 16px; /* Skriftstørrelse */
+  font-size: 20px; /* Skriftstørrelse */
   margin-right: 5px; /* Mellemrum før ikonet */
 }
 
