@@ -190,5 +190,33 @@ router.post('/api/login', async (req, res) => {
     }
 });
 
+router.post("/api/send-verification-code", async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: "E-mail mangler." });
+    }
+
+    try {
+        const hardcodedVerificationCode = "123456"; // Hardcoded kode
+
+        // Send koden til brugerens e-mail
+        const subject = "Din bekræftelseskode";
+        const textMessage = `Din bekræftelseskode er: ${hardcodedVerificationCode}`;
+        const htmlMessage = `<p>Din bekræftelseskode er: <strong>${hardcodedVerificationCode}</strong></p>`;
+
+        const emailResult = await mailToUser(email, subject, textMessage, htmlMessage);
+
+        if (emailResult.success) {
+            res.status(200).json({ message: "Bekræftelseskode sendt!" });
+        } else {
+            res.status(500).json({ error: "Kunne ikke sende e-mail." });
+        }
+    } catch (error) {
+        console.error("Fejl ved afsendelse af bekræftelseskode:", error.message);
+        res.status(500).json({ error: "Noget gik galt." });
+    }
+});
+
 
 export default router;
