@@ -91,7 +91,9 @@ router.get('/api/brugere/:brugernavn', async (req, res) => {
         console.error("Error in GET /api/brugere/:brugernavn:", error.message);
         res.status(500).json({ error: 'Could not fetch user.' });
     }
-});router.post('/api/advent/sendRabatkode', async (req, res) => {
+});
+
+router.post('/api/advent/sendRabatkode', async (req, res) => {
     const { username, rabatkode } = req.body;
 
     try {
