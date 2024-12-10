@@ -76,6 +76,7 @@
     background: url('https://www.cph.dk/496ab9/globalassets/5.1%20butikker%20%20spisesteder%20new/blocks%20for%20individual%20merchants/spisesteder/joe%20and%20the%20juice/foto-joe-and-the-juice-gate-c-paskontrollen.jpg?format=webp') no-repeat center center;
     background-size: cover;
     color: white;
+    height: 100vh; /* Fyld hele skærmhøjden */
 }
 
 .shop-section h1 {
