@@ -8,24 +8,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const closePopupBtn = document.getElementById("close-popup");
     const userIconDiv = document.querySelector(".user-icon");
 
-    // Function to check if the user is logged in
+    // Liste over gyldige vouchers og deres regler
+    const vouchers = {
+        "juice25": {
+            discount: 25,
+            type: "juice",
+            used: false,
+            message: "25% off on juice"
+        },
+        "sandwich25": {
+            discount: 25,
+            type: "sandwich",
+            used: false,
+            message: "25% off on sandwiches"
+        },
+        "advent50": {
+            discount: 50,
+            type: "all",
+            used: false,
+            message: "50% off your entire order"
+        },
+        "jul81": {
+            discount: 81,
+            type: "all",
+            used: false,
+            message: "81% off your entire order"
+        }
+    };
+
+    // Funktion til at tjekke om brugeren er logget ind
     function isLoggedIn() {
         return localStorage.getItem("isLoggedIn") === "true";
     }
 
-    // Function to update the user icon (Login/Logout button)
+    // Opdater brugersymbol
     function updateUserIcon() {
         const isLoggedInStatus = isLoggedIn();
-        
+
         if (isLoggedInStatus) {
-            userIconDiv.innerHTML = `
-                <span>&#128100;</span>
+            userIconDiv.innerHTML = 
+                `<span>&#128100;</span>
                 <button class="logout-button">LOG OUT</button>
             `;
 
             const logoutButton = document.querySelector(".logout-button");
             logoutButton.addEventListener("click", () => {
-                // Remove login status and username from localStorage
                 localStorage.removeItem("isLoggedIn");
                 localStorage.removeItem("username");
 
@@ -33,31 +60,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = "/login.html"; // Redirect to login page
             });
         } else {
-            userIconDiv.innerHTML = `
-                <span>&#128100;</span>
+            userIconDiv.innerHTML = 
+                `<span>&#128100;</span>
                 <a href="login.html">LOGIN</a>
             `;
         }
     }
 
-    // Update user icon on page load
     updateUserIcon();
 
-    // Add item to cart
+    // Tilføj vare til kurv
     document.querySelectorAll(".add-to-cart").forEach(button => {
         button.addEventListener("click", (event) => {
             if (!isLoggedIn()) {
-                // If not logged in, redirect to login page
                 alert("You must be logged in to add items to the cart.");
-                window.location.href = "login.html"; // Redirect to login page
-                event.preventDefault(); // Stop further execution
-                return; // Exit the function
+                window.location.href = "login.html";
+                event.preventDefault();
+                return;
             }
 
             const itemName = button.dataset.item;
             const itemPrice = parseFloat(button.dataset.price);
 
-            // Check if the item is already in the cart
             const existingItem = cart.find(item => item.name === itemName);
             if (existingItem) {
                 existingItem.quantity++;
@@ -70,9 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Update cart content
+    // Opdater kurvindhold
     function updateCart() {
-        cartItemsContainer.innerHTML = ""; // Clear existing items
+        cartItemsContainer.innerHTML = "";
         let total = 0;
 
         cart.forEach(item => {
@@ -89,7 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             total += item.price * item.quantity;
 
-            // Handle quantity change buttons
             const decreaseBtn = cartItemEl.querySelector(".decrease-quantity");
             const increaseBtn = cartItemEl.querySelector(".increase-quantity");
 
@@ -111,31 +134,85 @@ document.addEventListener("DOMContentLoaded", () => {
         totalPriceEl.textContent = total.toFixed(2);
     }
 
-    // Show popup
+    // Vis popup
     function showPopup() {
         popup.classList.add("visible");
     }
 
-    // Hide popup on "Continue Shopping"
+    // Skjul popup ved "Continue Shopping"
     continueShoppingBtn.addEventListener("click", () => {
         popup.classList.remove("visible");
     });
 
-    // Hide popup when close button is clicked
+    // Skjul popup ved klik på luk-knappen
     closePopupBtn.addEventListener("click", () => {
         popup.classList.remove("visible");
     });
 
-    // Checkout button
+    // Checkout-knap
     checkoutBtn.addEventListener("click", () => {
         if (!isLoggedIn()) {
             alert("You need to be logged in to checkout.");
-            window.location.href = "login.html";  // Redirect to login page
+            window.location.href = "login.html";
         } else {
             alert("Thank you for your purchase!");
-            cart.length = 0; // Clear the cart
+            cart.length = 0;
             updateCart();
             popup.classList.remove("visible");
+        }
+    });
+
+    // Voucher anvendelsesfunktion
+    document.getElementById("apply-voucher").addEventListener("click", () => {
+        const voucherCode = document.getElementById("voucher-code").value.trim().toLowerCase();
+        const voucherMessageEl = document.getElementById("voucher-message");
+
+        if (!vouchers[voucherCode]) {
+            voucherMessageEl.textContent = "Invalid code.";
+            voucherMessageEl.style.color = "red";
+            return;
+        }
+
+        const voucher = vouchers[voucherCode];
+        if (voucher.used) {
+            voucherMessageEl.textContent = "This code can only be used once.";
+            voucherMessageEl.style.color = "red";
+            return;
+        }
+
+        let totalDiscount = 0;
+        if (voucher.type === "juice") {
+            cart.forEach(item => {
+                if (item.name.toLowerCase().includes("power shake")) {  // Matcher juicevare
+                    totalDiscount += item.price * (voucher.discount / 100) * item.quantity;
+                }
+            });
+        } else if (voucher.type === "sandwich") {
+            cart.forEach(item => {
+                if (item.name.toLowerCase().includes("tunacado")) {  // Matcher sandwich
+                    totalDiscount += item.price * (voucher.discount / 100) * item.quantity;
+                }
+            });
+        } else if (voucher.type === "all") {
+            cart.forEach(item => {
+                totalDiscount += item.price * (voucher.discount / 100) * item.quantity;
+            });
+        }
+
+        if (totalDiscount > 0) {
+            const totalBeforeDiscount = parseFloat(totalPriceEl.textContent);
+            const newTotal = totalBeforeDiscount - totalDiscount;
+            totalPriceEl.textContent = newTotal.toFixed(2);
+            voucher.used = true;
+
+            voucherMessageEl.textContent = `${voucher.message} applied. You saved €${totalDiscount.toFixed(2)}!`;
+            voucherMessageEl.style.color = "green";
+
+            // Skjul voucher-feltet efter brug
+            document.querySelector(".voucher-section").style.display = "none";
+        } else {
+            voucherMessageEl.textContent = "The code does not apply to items in your cart.";
+            voucherMessageEl.style.color = "red";
         }
     });
 });

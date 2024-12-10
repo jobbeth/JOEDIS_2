@@ -71,12 +71,83 @@ router.get('/api/brugere', async (req, res) => {
     }
 });
 
+// Endpoint til at hente en bruger baseret på brugernavn
+router.get('/api/brugere/:brugernavn', async (req, res) => {
+    try {
+        const { brugernavn } = req.params;
+
+        console.log(`Fetching user with username: ${brugernavn}`);
+
+        // Hent bruger fra databasen baseret på brugernavn
+        const user = await db.getUserByUsername(brugernavn);
+
+        // Tjek om brugeren eksisterer
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ error: 'User not found.' });
+        }
+    } catch (error) {
+        console.error("Error in GET /api/brugere/:brugernavn:", error.message);
+        res.status(500).json({ error: 'Could not fetch user.' });
+    }
+});router.post('/api/advent/sendRabatkode', async (req, res) => {
+    const { username, rabatkode } = req.body;
+
+    try {
+        // Log det modtagne objekt
+        console.log("Request body received:", req.body);
+
+        // Hent brugerens data fra databasen
+        const user = await db.getUserByUsername(username);
+
+        // Log hele objektet returneret af getUserByUsername
+        console.log("User object returned by getUserByUsername:", user);
+
+        if (!user) {
+            console.log("User not found:", username);
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Log brugerens e-mail (sørg for at 'email' faktisk findes i user-objektet)
+        if (user.Email) {
+            console.log("User email found:", user.Email);
+        } else {
+            console.warn("Email is undefined for user:", user);
+        }
+
+        // Send e-mail med rabatkoden
+        const emailResult = await mailToUser(
+            user.Email,
+            `Din Adventskalender Rabatkode`,
+            `Her er din rabatkode: ${rabatkode}`,
+            `<p>Tak fordi du deltager i vores adventskalender! Her er din rabatkode: <b>${rabatkode}</b></p>`
+        );
+
+        if (emailResult.success) {
+            console.log("Email sent successfully to:", user.Email);
+            res.status(200).json({ message: 'Rabatkode sendt!' });
+        } else {
+            console.error("Error sending email to:", user.Email, emailResult.error);
+            res.status(500).json({ error: 'Kunne ikke sende e-mail.' });
+        }
+    } catch (error) {
+        console.error("Error in /api/advent/sendRabatkode:", error.message);
+        res.status(500).json({ error: 'Noget gik galt.' });
+    }
+});
+
+
 // Endpoint til login
 router.post('/api/login', async (req, res) => {
     try {
         const { Brugernavn, Adgangskode } = req.body;
 
+        // Log request body
+        console.log("Request body received:", req.body);
+
         if (!Brugernavn || !Adgangskode) {
+            console.warn("Missing required fields: Brugernavn or Adgangskode.");
             return res.status(400).json({ error: 'Missing required fields: Brugernavn or Adgangskode.' });
         }
 
@@ -84,23 +155,38 @@ router.post('/api/login', async (req, res) => {
 
         // Hent bruger fra databasen baseret på Brugernavn
         const user = await db.getUserByUsername(Brugernavn);
-
-        if (!user) {
+        
+        // Log resultatet af databasekaldet
+        if (user) {
+            console.log("User found in database:", user);
+        } else {
+            console.warn("No user found with username:", Brugernavn);
             return res.status(401).json({ error: 'Invalid username or password.' });
         }
 
+        // Log adgangskoden fra databasen (krypteret)
+        console.log("Encrypted password from database:", user.Adgangskode);
+
         // Sammenlign adgangskoder
         const passwordMatch = await bcrypt.compare(Adgangskode, user.Adgangskode);
-        if (!passwordMatch) {
+        
+        // Log resultatet af bcrypt sammenligning
+        if (passwordMatch) {
+            console.log("Password match successful for user:", Brugernavn);
+        } else {
+            console.warn("Password mismatch for user:", Brugernavn);
             return res.status(401).json({ error: 'Invalid username or password.' });
         }
 
         // Login er succesfuldt
+        console.log("Login successful for user:", Brugernavn);
         res.status(200).json({ message: 'Login successful.' });
     } catch (error) {
-        console.error("Error in POST /api/login:", error.message);
+        // Log fejlen med fuld stack trace
+        console.error("Error in POST /api/login:", error);
         res.status(500).json({ error: 'Could not process login.' });
     }
 });
+
 
 export default router;

@@ -4,8 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
     new Date("2024-12-03"), // 1. Advent
     new Date("2024-12-08"), // 2. Advent
     new Date("2024-12-17"), // 3. Advent
-    new Date("2024-12-24")  // 4. Advent
+    new Date("2024-12-24"), // 4. Advent
   ];
+  const rabatkoder = [
+    "25PERCENT-JUICE", // Rabatkode for 1. Advent
+    "FREEJUICE-SANDWICH", // Rabatkode for 2. Advent
+    "FREECAKE-DRINK", // Rabatkode for 3. Advent
+    "GIFT100-DKK", // Rabatkode for 4. Advent
+  ];
+
   const today = new Date();
 
   // Tjek loginstatus fra localStorage
@@ -41,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Tilføj klik-hændelse til hver låge
   doors.forEach((door, index) => {
-    door.addEventListener("click", () => {
+    door.addEventListener("click", async () => {
       if (isLoggedIn !== "true") {
         alert("You must be logged in to access the advent calendar. Please log in.");
         window.location.href = "/login.html"; // Omdiriger til login-siden
@@ -52,6 +59,33 @@ document.addEventListener("DOMContentLoaded", () => {
       if (today >= adventDates[index]) {
         if (!door.classList.contains("open")) {
           door.classList.add("open");
+
+          // Hent rabatkoden for denne låge
+          const rabatkode = rabatkoder[index];
+
+          // Hent brugernavn fra localStorage
+          const username = localStorage.getItem("username");
+
+          // Send rabatkode via backend
+          try {
+            const response = await fetch(`/api/advent/sendRabatkode`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, rabatkode }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+              alert(`Rabatkode er sendt til din e-mail!`);
+            } else {
+              alert(`Kunne ikke sende rabatkoden: ${result.error}`);
+            }
+          } catch (error) {
+            console.error("Error sending rabatkode:", error);
+            alert("Noget gik galt. Prøv igen senere.");
+          }
         } else {
           alert("Denne låge er allerede åbnet!");
         }
@@ -61,5 +95,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
-// Hej 
