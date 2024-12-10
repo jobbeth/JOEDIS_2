@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
   const doors = document.querySelectorAll(".door");
   const adventDates = [
-    new Date("2024-12-03"), // 1. Advent
+    new Date("2024-12-01"), // 1. Advent
     new Date("2024-12-08"), // 2. Advent
-    new Date("2024-12-17"), // 3. Advent
-    new Date("2024-12-24"), // 4. Advent
+    new Date("2024-12-15"), // 3. Advent
+    new Date("2024-12-22"), // 4. Advent
   ];
   const rabatkoder = [
     "25PERCENT-JUICE", // Rabatkode for 1. Advent
