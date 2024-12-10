@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("User object to be sent:", newUser);
 
         try {
-            const response = await fetch("http://165.227.134.194/api/brugere", {
+            const response = await fetch("/api/brugere", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
