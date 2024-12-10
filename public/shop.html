@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+    <!-- Korrekt sti til CSS -->
+
+    <link rel="stylesheet" href="css/shop.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <!-- Korrekt sti til logo -->
+            <img src="https://cdn.prod.website-files.com/5cb303852da2ad2e40571231/61e9a1b8cc37151d8d02f8ca_Logo%20New.png" alt="Logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="#">MENU</a></li>
+            <li><a href="#">STORES</a></li>
+            <li><a href="#">APP</a></li>
+            <li><a href="#">CAREERS</a></li>
+            <li><a href="#">EVENT BOOKINGS</a></li>
+            <li><a href="advent.html">JUICY ADVENT</a></li>
+            <li><a href="#">& MORE</a></li>
+        </ul>
+        <div class="nav-right">
+            <!-- Korrekt sti til flaget -->
+            <img class="flag" src="https://www.stickers.dk/components/com_redshop/assets/images/product/thumb/1394283546_Flag---Danmark1FSand2_w472_h350.png" alt="DK Flag">
+            <div class="user-icon">
+                <span>&#128100;</span>
+                <!-- Korrekt sti til login -->
+                <a href="login.html">LOGIN</a>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="shop-section">
+        <h1>Order now!</h1>
+        <div class="menu-container">
+            <!-- Sandwich Item -->
+            <div class="menu-item">
+                <img src="https://cdn.prod.website-files.com/5cb303852da2ad609e57122e/66380e22346c5153165d1edb_tunacado-sandwich-on-plate.webp" alt="Tunacado Sandwich">
+                <h2>TUNACADO</h2>
+                <p>Joe's Classic Bread, Avocado, Tuna Mousse, Vegan Pesto, Tomato</p>
+                <button class="add-to-cart" data-item="Tunacado" data-price="11">Add to Cart</button>
+            </div>
+            <!-- Juice Item -->
+            <div class="menu-item">
+                <img src="https://farm6.staticflickr.com/5671/22934879194_5f7306ac9b_b.jpg" alt="Power Shake">
+                <h2>POWER SHAKE</h2>
+                <p>16OZ - Vanilla Milk, Strawberries, Banana, Ice</p>
+                <button class="add-to-cart" data-item="Power Shake" data-price="7">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Window -->
+    <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2>Your Cart</h2>
+                <button id="close-popup" class="close-popup">×</button>
+            </div>
+            <div id="cart-items"></div>
+            <p>Total: €<span id="total-price">0</span></p>
+
+            <!-- Voucher Section -->
+            <div class="voucher-section">
+                <input type="text" id="voucher-code" placeholder="Enter Voucher Code">
+                <button id="apply-voucher">Apply Voucher</button>
+                <p id="voucher-message" class="voucher-message"></p>
+            </div>
+
+            <div class="popup-actions">
+                <button id="continue-shopping">Continue Shopping</button>
+                <button id="checkout">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/shop.js"></script>
+</body>
+</html>
