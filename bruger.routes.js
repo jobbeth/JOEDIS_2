@@ -62,6 +62,7 @@ router.get('/api/brugere', async (req, res) => {
 
         // Hent alle brugere fra databasen
         const users = await db.getAllUsers();
+        
 
         // Hvis data blev hentet korrekt, returner det
         res.status(200).json(users);
